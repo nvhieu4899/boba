@@ -1,0 +1,3 @@
+mongo:
+  dbname: boba
+  connectionString: mongodb+srv://nvhieu:nguyenvanhieu@cluster0.oyhgv.gcp.mongodb.net/boba?retryWrites=true&w=majority

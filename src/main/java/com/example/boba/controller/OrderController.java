@@ -21,10 +21,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+
+import static com.example.boba.ConfigUtils.AUTHORIZATION_HEADER;
 
 @RestController
 @RequestMapping("order")
@@ -54,7 +53,7 @@ public class OrderController {
     public Order createOrder(HttpServletRequest request, @RequestBody List<OrderDetailDTO> orderDetailList) {
 
 
-        String jwt = request.getHeader(ConfigUtils.AUTHORIZATION_HEADER);
+        String jwt = request.getHeader(AUTHORIZATION_HEADER);
 
         ApplicationUser user = userInfoFromJwt.getUserFromJwt(jwt);
 
@@ -76,6 +75,17 @@ public class OrderController {
         List<OrderDetail> savedDetails = orderDetailRepository.saveAll(orderDetails);
         Order order = new Order(user, savedDetails, new Date());
         return orderRepository.save(order);
+    }
+
+    @GetMapping("history")
+    public List<Order> history(HttpServletRequest request) {
+        String jwt = request.getHeader(AUTHORIZATION_HEADER);
+        ApplicationUser user = userInfoFromJwt.getUserFromJwt(jwt);
+
+        if (user != null) {
+            return orderRepository.findByCustomerId(user.getId());
+        } else
+            return Collections.emptyList();
     }
 
 }

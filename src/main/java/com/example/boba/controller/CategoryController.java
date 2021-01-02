@@ -13,6 +13,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("category")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class CategoryController {
 
 

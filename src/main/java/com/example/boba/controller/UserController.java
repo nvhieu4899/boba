@@ -2,6 +2,7 @@ package com.example.boba.controller;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.example.boba.dto.LoginDto;
 import com.example.boba.model.user.ApplicationUser;
 import com.example.boba.model.user.UserRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -20,8 +21,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.example.boba.ConfigUtils.EXPIRATION_TIME;
-import static com.example.boba.ConfigUtils.SECRET;
+import static com.example.boba.ConfigUtils.*;
 
 @RestController
 public class UserController {
@@ -44,19 +44,18 @@ public class UserController {
     }
 
     @PostMapping("sign-in")
-    public Map<String, Object> login(@RequestBody ApplicationUser applicationUser) throws JsonProcessingException {
-        ApplicationUser user = userRepository.findOneByEmail(applicationUser.getEmail());
+    public Map<String, Object> login(@RequestBody LoginDto loginDto) throws JsonProcessingException {
+        ApplicationUser user = userRepository.findOneByEmail(loginDto.getEmail());
         if (user == null) throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid credentials");
         else {
-            boolean passwordMatch = passwordEncoder.matches(applicationUser.getPassword(), user.getPassword());
+            boolean passwordMatch = passwordEncoder.matches(loginDto.getPassword(), user.getPassword());
             if (!passwordMatch) throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid credentials");
             else {
                 HashMap<String, Object> response = new HashMap<>();
                 ObjectMapper objectMapper = new ObjectMapper();
                 String subject = objectMapper.writeValueAsString(user);
-                String token = JWT.create().withSubject(subject)
+                String token = TOKEN_PREFIX + JWT.create().withSubject(subject)
                         .withExpiresAt(new Date(System.currentTimeMillis() + EXPIRATION_TIME)).sign(Algorithm.HMAC512(SECRET.getBytes()));
-
                 response.put("userInfo", user);
                 response.put("token", token);
                 return response;

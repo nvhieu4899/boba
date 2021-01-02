@@ -46,6 +46,7 @@ public class ApplicationUser implements UserDetails {
         this.dateOfBirth = dateOfBirth;
     }
 
+    @JsonIgnore
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<SimpleGrantedAuthority> authorities = new ArrayList<>();
@@ -56,7 +57,7 @@ public class ApplicationUser implements UserDetails {
     @JsonIgnore
     @Override
     public String getUsername() {
-        return null;
+        return email;
     }
 
     @JsonIgnore

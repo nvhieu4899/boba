@@ -1,6 +1,7 @@
 package com.example.boba.model.drink;
 
 import com.example.boba.model.category.Category;
+import com.example.boba.model.drinkPrice.DrinkPrice;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,6 +10,9 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -30,11 +34,14 @@ public class Drink {
 
     private Integer cost;
 
-    public Drink(Category category, String name, String image, String description, Integer cost) {
+    @DBRef(lazy = true)
+    private List<DrinkPrice> priceList;
+
+    public Drink(Category category, String name, String image, String description) {
         this.category = category;
         this.name = name;
         this.image = image;
         this.description = description;
-        this.cost = cost;
+        priceList = new ArrayList<>();
     }
 }

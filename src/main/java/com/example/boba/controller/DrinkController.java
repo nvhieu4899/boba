@@ -21,6 +21,7 @@ import java.util.*;
 
 @RestController
 @RequestMapping("drink")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class DrinkController {
 
     @Autowired

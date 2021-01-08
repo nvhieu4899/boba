@@ -37,6 +37,7 @@ public class UserController {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Duplicated email");
         } else {
             applicationUser.setPassword(passwordEncoder.encode(applicationUser.getPassword()));
+            applicationUser.setRole(ApplicationUser.Role.CUSTOMER);
             return userRepository.save(applicationUser);
         }
     }

@@ -3,6 +3,8 @@ package com.example.boba.controller;
 
 import com.example.boba.ConfigUtils;
 import com.example.boba.dto.OrderDetailDTO;
+import com.example.boba.model.drink.Drink;
+import com.example.boba.model.drink.DrinkRepository;
 import com.example.boba.model.drinkPrice.DrinkPrice;
 import com.example.boba.model.drinkPrice.DrinkPriceRepository;
 import com.example.boba.model.order.Order;
@@ -37,6 +39,9 @@ public class OrderController {
     private UserRepository userRepos;
 
     @Autowired
+    private DrinkRepository drinkRepository;
+
+    @Autowired
     private DrinkPriceRepository drinkPriceRepository;
 
     @Autowired
@@ -63,12 +68,14 @@ public class OrderController {
             Optional<DrinkPrice> drinkPriceOps = drinkPriceRepository.findById(detail.getDrinkPriceId());
             Topping topping = null;
             if (detail.getToppingId() != null) {
-
                 Optional<Topping> toppingOps = toppingRepository.findById(detail.getToppingId());
-                topping = toppingOps.get();
+                if (toppingOps.isPresent())
+                    topping = toppingOps.get();
             }
             if (drinkPriceOps.isPresent()) {
-                OrderDetail orderDetail = new OrderDetail(drinkPriceOps.get(), detail.getQuantity(), detail.getNote(), topping);
+                Drink drink = drinkRepository.findByPriceListContains(drinkPriceOps.get());
+                String name = drink != null ? drink.getName() : "Unknown";
+                OrderDetail orderDetail = new OrderDetail(drinkPriceOps.get(), name, detail.getQuantity(), detail.getNote(), topping);
                 orderDetails.add(orderDetail);
             }
         }

@@ -17,6 +17,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.annotation.security.RolesAllowed;
 import java.util.*;
 
 @RestController
@@ -62,7 +63,8 @@ public class DrinkController {
         return drinkRepository.save(savedDrink);
     }
 
-    @GetMapping(":drinkId")
+    @GetMapping("{drinkId}")
+    @PreAuthorize("permitAll()")
     public ResponseEntity<Drink> getDrinkDetails(@PathVariable("drinkId") String drinkId) {
         Optional<Drink> drink = drinkRepository.findById(drinkId);
 

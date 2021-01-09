@@ -1,6 +1,7 @@
 package com.example.boba.model.orderDetail;
 
 
+import com.example.boba.model.drink.Drink;
 import com.example.boba.model.drinkPrice.DrinkPrice;
 import com.example.boba.model.drinkPrice.DrinkPriceRepository;
 import com.example.boba.model.topping.Topping;
@@ -16,6 +17,7 @@ public class OrderDetail {
     @Id
     private String id;
     private DrinkPrice drinkPrice;
+    private String drinkName;
     private int quantity;
     private String note;
     private int subtotal;
@@ -30,11 +32,12 @@ public class OrderDetail {
         return subtotal;
     }
 
-    public OrderDetail(DrinkPrice drinkPrice, int quantity, String note, Topping topping) {
+    public OrderDetail(DrinkPrice drinkPrice, String drinkName, int quantity, String note, Topping topping) {
         this.drinkPrice = drinkPrice;
         this.quantity = quantity;
         this.note = note;
         this.topping = topping;
+        this.drinkName = drinkName;
         calculateSubTotal();
     }
 }

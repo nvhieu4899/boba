@@ -16,7 +16,9 @@ import com.example.boba.model.topping.ToppingRepository;
 import com.example.boba.model.user.ApplicationUser;
 import com.example.boba.model.user.UserRepository;
 import com.example.boba.service.GetUserInfoFromJwt;
+import jdk.nashorn.internal.runtime.options.Option;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -93,6 +95,12 @@ public class OrderController {
             return orderRepository.findByCustomerId(user.getId());
         } else
             return Collections.emptyList();
+    }
+
+    @GetMapping("{orderId}")
+    public ResponseEntity<Order> getOrderById(@PathVariable("orderId") String orderId) {
+        Optional<Order> optionalOrder = orderRepository.findById(orderId);
+        return optionalOrder.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.status(404).build());
     }
 
 }

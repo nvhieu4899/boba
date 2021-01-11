@@ -13,6 +13,8 @@ import java.util.List;
 
 @RestController
 @RequestMapping("topping")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
+
 public class ToppingController {
 
     @Autowired

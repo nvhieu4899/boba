@@ -35,6 +35,8 @@ public class Order {
 
     private Date creationDate;
 
+    private boolean isProcessed;
+
     @JsonIgnore
     public int calculateTotal() {
         cost = 0;
@@ -48,6 +50,7 @@ public class Order {
         this.customer = customer;
         this.orderDetailList = orderDetailList;
         this.creationDate = creationDate;
+        isProcessed = false;
         calculateTotal();
     }
 }

@@ -18,6 +18,7 @@ import com.example.boba.model.user.UserRepository;
 import com.example.boba.service.GetUserInfoFromJwt;
 import jdk.nashorn.internal.runtime.options.Option;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -101,6 +102,20 @@ public class OrderController {
     public ResponseEntity<Order> getOrderById(@PathVariable("orderId") String orderId) {
         Optional<Order> optionalOrder = orderRepository.findById(orderId);
         return optionalOrder.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.status(404).build());
+    }
+
+    @PreAuthorize("hasRole('ROLE_STAFF') or hasRole('ROLE_ADMIN')")
+    @PutMapping("{orderId}")
+    public ResponseEntity<Order> verifyProcessedOrder(@PathVariable("orderId") String orderId) {
+        Optional<Order> optionalOrder = orderRepository.findById(orderId);
+        if (optionalOrder.isPresent()) {
+            Order order = optionalOrder.get();
+            order.setProcessed(true);
+            return ResponseEntity.ok(orderRepository.save(order));
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
     }
 
 }
